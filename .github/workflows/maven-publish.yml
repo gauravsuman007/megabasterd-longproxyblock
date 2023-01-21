@@ -28,21 +28,20 @@ jobs:
       needs: [build_and_test]
       steps:
       - uses: actions/checkout@v2
-      - run: ls -a
       - name: version
         run: echo "VERSION_NO=$(grep -oPm1 '(?<=<version>)[^<]+' pom.xml)" >> $GITHUB_ENV
-      - run: echo "${{ env.VERSION_NO }}"
+#      - run: echo "${{ env.VERSION_NO }}"
         id: version
-#      - name: release
-#        uses: actions/create-release@v1
-#        id: create_release
-#        with:
-#          draft: false
-#          prerelease: false
-#          release_name: ${{ steps.version.outputs.version }}
-#          tag_name: ${{ github.ref }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ env.VERSION_NO }}
+          tag_name: ${{ env.VERSION_NO }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-java@v1
         with:
           java-version: 11
