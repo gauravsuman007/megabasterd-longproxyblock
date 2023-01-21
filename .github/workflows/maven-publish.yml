@@ -30,7 +30,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: ls -a
       - name: version
-        run: echo "::set-output name=version::$(grep -oPm1 '(?<=<version>)[^<]+' pom.xml)"
+        run: echo "VERSION_NO={grep -oPm1 '(?<=<version>)[^<]+' pom.xml}" >> $GITHUB_ENV
+      - run: echo "${{ env.VERSION_NO }}"
         id: version
 #      - name: release
 #        uses: actions/create-release@v1
