@@ -42,13 +42,13 @@ jobs:
           java-version: 11
       - run: mvn -B package --file pom.xml -DskipTests
 
-#      - uses: "marvinpinto/action-automatic-releases@latest"
-#        with:
-#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-#          prerelease: false
-#          automatic_release_tag: "latest"
-#          files: |
-#            target/*jar-with-dependencies.jar
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: ${{ env.VERSION_NO }}
+          files: |
+            target/*jar-with-dependencies.jar
 
 #      - name: Release
 #        uses: softprops/action-gh-release@v1
@@ -56,25 +56,25 @@ jobs:
 #          files: 
 
 
-      - name: release
-        uses: actions/create-release@v1
-        id: create_release
-        with:
-          draft: false
-          prerelease: false
-          release_name: ${{ env.VERSION_NO }}
-          tag_name: ${{ env.VERSION_NO }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: upload jar
-        uses: alexellis/upload-assets@0.4.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_paths: '["./target/*jar-with-dependencies.jar"]'
-#          asset_content_type: application
+#      - name: release
+#        uses: actions/create-release@v1
+#        id: create_release
+#        with:
+#          draft: false
+#          prerelease: false
+#          release_name: ${{ env.VERSION_NO }}
+#          tag_name: ${{ env.VERSION_NO }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: upload jar
+#        uses: alexellis/upload-assets@0.4.0
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+##          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_paths: '["./target/*jar-with-dependencies.jar"]'
+##          asset_content_type: application
 
 
 #      - name: upload jar
