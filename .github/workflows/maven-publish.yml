@@ -5,7 +5,11 @@ name: Maven CI/CD
 #    branches: [ master ]
 #  pull_request:
 #    branches: [ master ]
-on: [push]
+#on: [push]
+on:
+  push:
+    tags:
+      - "v*"
 
 jobs:
   build_and_test:
@@ -32,29 +36,44 @@ jobs:
         run: echo "VERSION_NO=$(grep -oPm1 '(?<=<version>)[^<]+' pom.xml)" >> $GITHUB_ENV
 #      - run: echo "${{ env.VERSION_NO }}"
         id: version
-      - name: release
-        uses: actions/create-release@v1
-        id: create_release
-        with:
-          draft: false
-          prerelease: false
-          release_name: ${{ env.VERSION_NO }}
-          tag_name: ${{ env.VERSION_NO }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/setup-java@v1
         with:
           java-version: 11
       - run: mvn -B package --file pom.xml -DskipTests
-      - name: upload jar
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*jar-with-dependencies.jar
-#          asset_name: azblogfilter.darwin-amd64.tar.gz
-          asset_content_type: application
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            target/*jar-with-dependencies.jar
+
+#      - name: Release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          files: 
+
+
+#      - name: release
+#        uses: actions/create-release@v1
+#        id: create_release
+#        with:
+#          draft: false
+#          prerelease: false
+#          release_name: ${{ env.VERSION_NO }}
+#          tag_name: ${{ env.VERSION_NO }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: upload jar
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: target/*jar-with-dependencies.jar
+##          asset_name: azblogfilter.darwin-amd64.tar.gz
+#          asset_content_type: application
 #      - run: mkdir staging && cp target/*jar-with-dependencies.jar staging
 #      - uses: actions/upload-artifact@v1
 #        with:
