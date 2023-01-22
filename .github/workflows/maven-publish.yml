@@ -74,7 +74,6 @@ jobs:
         with:
 #          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_paths: '["target/*jar-with-dependencies.jar"]'
-#          asset_name: azblogfilter.darwin-amd64.tar.gz
 #          asset_content_type: application
 
 
