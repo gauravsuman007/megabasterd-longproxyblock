@@ -46,8 +46,17 @@ jobs:
         with:
           java-version: 11
       - run: mvn -B package --file pom.xml -DskipTests
-      - run: mkdir staging && cp target/*jar-with-dependencies.jar staging
-      - uses: actions/upload-artifact@v1
+      - name: upload jar
+        uses: actions/upload-release-asset@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Package
-          path: staging
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/*jar-with-dependencies.jar
+#          asset_name: azblogfilter.darwin-amd64.tar.gz
+          asset_content_type: application
+#      - run: mkdir staging && cp target/*jar-with-dependencies.jar staging
+#      - uses: actions/upload-artifact@v1
+#        with:
+#          name: Package
+#          path: staging
